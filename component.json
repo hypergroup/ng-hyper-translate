@@ -1,0 +1,17 @@
+{
+  "name": "ng-hyper-translate",
+  "repo": "hypergroup/ng-hyper-translate",
+  "description": "Translation for ng-hyper",
+  "version": "0.1.0",
+  "keywords": [],
+  "dependencies": {
+    "airbnb/Polyglot.js": "*"
+  },
+  "development": {},
+  "license": "MIT",
+  "main": "index.js",
+  "scripts": [
+    "index.js"
+  ],
+  "remotes": []
+}

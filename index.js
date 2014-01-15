@@ -17,13 +17,11 @@ var pkg = module.exports = angular.module('ng-hyper-translate', ['ng-hyper']);
 
 pkg.directive('hyperTranslate', [
   'hyper',
-  'hyperStatus',
-  function(hyper, status) {
+  function(hyper) {
     return {
       scope: true,
       restrict: 'A',
       link: function($scope, elem, attrs) {
-        status.loading(elem);
         var polyglot = new Polyglot();
 
         var transParts = attrs.hyperTranslate.split('<-');
@@ -55,11 +53,10 @@ pkg.directive('hyperTranslate', [
         });
 
         function translate() {
-          if (!name) return status.loading(elem);
+          if (!name) return;
           var res = polyglot.t(name, $scope);
           if (res === name) return elem.text('');
-          elem.res(res);
-          status.loaded(elem);
+          elem.text(res);
         }
       }
     };

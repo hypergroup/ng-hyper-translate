@@ -9,7 +9,7 @@ all: build
 
 build: $(FILE) $(MIN)
 
-$(FILE):
+$(FILE): $(JS_FILES)
 	@$(COMPONENT) build --standalone $(NAME)
 	@mv build/build.js $(FILE)
 

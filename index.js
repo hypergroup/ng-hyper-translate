@@ -50,13 +50,13 @@ pkg.directive('hyperTranslate', [
         var namedTemplates = childrenToParams(tElem.children());
         tElem.html('');
         var conf = parse(tAttrs.hyperTranslate, namedTemplates);
-        var path = conf.path;
         var params = conf.params;
         var attr = conf.attr;
         var templates = conf.templates;
 
         return function link($scope, elem, attrs) {
           var template = '';
+          var path = attrs.hyperTranslate.split('->')[0].trim();
 
           if (attr === 'html') {
             $scope.$watch(function() {

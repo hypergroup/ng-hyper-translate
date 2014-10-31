@@ -3,7 +3,13 @@
  */
 
 var angular = window.angular;
-var Polyglot = require('polyglot');
+var compileTranslation = require('lang-js-translate');
+
+/**
+ * Allow users to opt into displaying missing translation warnings
+ */
+
+if (typeof BROWSER_ENV === 'undefined') BROWSER_ENV = 'production';
 
 /**
  * Initialize the ng-hyper-translate module
@@ -11,23 +17,39 @@ var Polyglot = require('polyglot');
 
 var pkg = module.exports = angular.module('ng-hyper-translate', ['ng-hyper']);
 
+pkg.value('hyperTranslateFallback', '');
+pkg.value('hyperTranslateOpen', '%{');
+pkg.value('hyperTranslateClose', '}');
+pkg.value('hyperTranslateLocale', 'en');
+
 pkg.factory('hyperTranslate', [
   'hyper',
-  function(hyper) {
-    return function(path, templates, $scope, fn) {
-      var polyglot = new Polyglot();
+  'hyperTranslateFallback',
+  'hyperTranslateOpen',
+  'hyperTranslateClose',
+  'hyperTranslateLocale',
+  function(hyper, fallback, open, close, locale) {
+    var opts = {
+      fallback: fallback,
+      open: open,
+      close: close,
+      validatePluralKey: false
+    };
+    var cache = {};
+    return function(path, $scope, fn) {
+      return hyper.get(path, $scope, function(value, req) {
+        if (!value) return fn();
+        if (cache[value]) return fn(cache[value] );
 
-      hyper.get(path, $scope, function(value, req) {
-        if (!value) return;
-        var name = '$$' + req.target;
-        var phrases = {};
-        phrases[name] = value;
+        var arr = Array.isArray(value) ? value : value.split(/ *\|\|\|\| */);
+        var str = arr.length > 1 ? arr : value;
 
-        polyglot.extend(phrases);
-
-        var res = polyglot.t(name, templates);
-        if (res === name) return fn('');
-        fn(res);
+        try {
+          fn(cache[value] = compileTranslation(str, locale, opts));
+        } catch (err) {
+          console.error(err.stack || err.message || err);
+          fn();
+        };
       });
     };
   }
@@ -41,55 +63,40 @@ pkg.directive('hyperTranslate', [
   'hyperTranslate',
   '$compile',
   'hyper',
-  function(translate, $compile, hyper) {
+  function(lookup, $compile, hyper) {
+    function watchParams(params, $scope) {
+      angular.forEach(params, function(path, target) {
+        hyper.get(path, $scope, function(value, req) {
+          $scope[target] = value;
+        });
+      });
+    }
+
+    // set the innerHTML on the element while compiling it with angular
+    function setHtml(elem, $scope, str) {
+      var child = $compile('<span class="ng-hyper-translate-binding">' + str + '</span>')($scope);
+      elem.empty();
+      elem.append(child);
+    }
+
     return {
       restrict: 'A',
       scope: true,
       priority: 1000,
       compile: function compile(tElem, tAttrs, transclude) {
-        var namedTemplates = childrenToParams(tElem.children());
+        var templates = childrenToParams(tElem.children());
         tElem.html('');
-        var conf = parse(tAttrs.hyperTranslate, namedTemplates);
-        var path = conf.path;
-        var params = conf.params;
-        var attr = conf.attr;
-        var templates = conf.templates;
 
         return function link($scope, elem, attrs) {
-          var template = '';
-
-          if (attr === 'html') {
-            $scope.$watch(function() {
-              return template;
-            }, function() {
-              var child = $compile('<span class="ng-hyper-translate-binding">' + template + '</span>')($scope);
-              // TODO do we need to do GC here or is it automatic?
-              elem.empty();
-              elem.append(child);
-            });
-          } else {
-            $scope.$watch(function() {
-              return $scope.$eval(template);
-            }, function(value) {
-              elem.attr(attr, value);
-            });
-          }
-
-          translate(path, templates, $scope, function(templateStr) {
-            template = attr === 'html' ?
-              templateStr :
-              '"' +
-                templateStr
-                  .replace(/\"/, '\\"')
-                  .replace(/\{\{/, '" + ')
-                  .replace(/\}\}/, ' + "') +
-              '"';
-          });
-
-          angular.forEach(params, function(path, target) {
-            hyper.get(path, $scope, function(value, req) {
-              $scope[target] = value;
-            });
+          var $setHtml = setHtml.bind(null, elem);
+          var $setAttr = elem.attr.bind(elem);
+          var $tmp;
+          $scope.$watch(function() {
+            return $scope.$eval('"' + tAttrs.hyperTranslate + '"');
+          }, function(str) {
+            if ($tmp) $tmp.$destroy();
+            $tmp = $scope.$new();
+            init($setHtml, $setAttr, watchParams, lookup, $tmp, templates, str);
           });
         };
       }
@@ -97,7 +104,49 @@ pkg.directive('hyperTranslate', [
   }
 ]);
 
-function parse(hyperTranslate, namedTemplates) {
+/**
+ * Initialize the translation expression and attach it to the element
+ */
+
+function init(setHtml, setAttr, watchParams, lookup, $scope, tmplSrc, str) {
+  // create a new child scope and merge in template sources
+  var $templates = $scope.$new();
+  for (var tmpl in tmplSrc) {
+    $templates[tmpl] = tmplSrc[tmpl];
+  }
+
+  // parse the translation express
+  var conf = parse(str);
+  var path = conf.path;
+  var attr = conf.attr;
+  var setter = attr === 'html' ? setHtml.bind(null, $scope) : setAttr.bind(null, attr);
+
+  // lookup the path to the translation in the translate service
+  var template = noop;
+  lookup(path, $scope, function(fn) {
+    template = fn ? fn : noop;
+  });
+
+  // watch the params and template
+  watchParams(conf.params, $scope);
+  $scope.$watch(evalTemplate, setter);
+
+  // eval the template with the $templates child scope
+  function evalTemplate() {
+    return template($templates).join('');
+  }
+
+  // create a noop for when a template doesn't exist
+  function noop() {
+    return BROWSER_ENV === 'development' ? ['!__', path, '__!'] : [];
+  }
+}
+
+/**
+ * Parse a translate expression into a config
+ */
+
+function parse(hyperTranslate) {
   var attrParts = hyperTranslate.split('->');
 
   if (attrParts.length === 1) attrParts.unshift('html');
@@ -108,7 +157,6 @@ function parse(hyperTranslate, namedTemplates) {
   var path = parts[0].trim();
 
   var params = {};
-  var templates = {};
   angular.forEach((parts[1] || '').split(','), function(expr) {
     if (expr === '') return;
     var parts = expr.trim().split(' as ');
@@ -122,14 +170,12 @@ function parse(hyperTranslate, namedTemplates) {
     }
 
     params[target] = path;
-    templates[target] = namedTemplates[target] || '{{' + target + '}}';
   });
 
   return {
     path: path,
     params: params,
-    attr: attr,
-    templates: templates
+    attr: attr
   };
 }
 

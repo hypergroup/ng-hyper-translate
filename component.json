@@ -5,7 +5,7 @@
   "version": "0.2.0",
   "keywords": [],
   "dependencies": {
-    "airbnb/polyglot.js": "*"
+    "lang-js/translate": "^1.0.0"
   },
   "development": {},
   "license": "MIT",

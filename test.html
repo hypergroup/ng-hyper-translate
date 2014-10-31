@@ -1,0 +1,70 @@
+<!doctype html>
+<html>
+  <head>
+
+  </head>
+  <body data-ng-app="test">
+
+    <div data-hyper=".translations as t">
+
+      <div data-hyper-translate="t.simple"></div>
+      <div data-hyper-translate="t.param <- .username"></div>
+      <div data-ng-scope data-ng-init="foo = {smart_count: 0}">
+        <input data-ng-model="foo.smart_count" type="number" />
+        <span data-hyper-translate="t.cars <- foo.smart_count"></span>
+      </div>
+      <div data-ng-scope data-ng-init="templateValue = 'templated'">
+        <input data-ng-model="templateValue" />
+        <span data-hyper-translate="t.{{templateValue}}"></span>
+      </div>
+      <input type=submit data-hyper-translate="value -> t.create" />
+      <div data-hyper-translate="t.param <- .username">
+        <span name="username">
+          <a href="#" data-ng-bind="username"></a>
+        </span>
+      </div>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.2.20/angular-mocks.js"></script>
+    <script src="./build/build.js"></script>
+
+    <script>
+      BROWSER_ENV = 'development';
+      require('ng-hyper');
+      var app = angular.module('test', ['ng-hyper', 'ng-hyper-translate']);
+      app.provider({
+        '$httpBackend': angular.mock.$HttpBackendProvider
+      });
+
+      var t = {
+        simple: 'Simple Translation',
+        param: 'Hello, %{username}',
+        templated: 'This is a templated value',
+        cars: [
+          '%{smart_count} car',
+          '%{smart_count} cars'
+        ],
+        create: 'Create'
+      };
+
+      var root = {
+        href: '/api',
+        username: 'Joe',
+        translations: t
+      };
+
+      app.run([
+        '$httpBackend',
+        function(http) {
+          http.whenGET('/api').respond(root);
+          setTimeout(function(){
+            http.flush();
+          }, 100);
+        }
+      ]);
+      //app.bootstrap(document, ['test']);
+    </script>
+  </body>
+</html>

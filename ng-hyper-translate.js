@@ -815,7 +815,7 @@ pkg.directive('hyperTranslate', [
           var $setAttr = elem.attr.bind(elem);
           var $tmp;
           $scope.$watch(function() {
-            return $scope.$eval('"' + tAttrs.hyperTranslate + '"');
+            return attrs.hyperTranslate;
           }, function(str) {
             if ($tmp) $tmp.$destroy();
             $tmp = $scope.$new();

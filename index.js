@@ -41,11 +41,12 @@ pkg.factory('hyperTranslate', [
         if (!value) return fn();
         if (cache[value]) return fn(cache[value] );
 
-        var arr = Array.isArray(value) ? value : value.split(/ *\|\|\|\| */);
-        var str = arr.length > 1 ? arr : value;
+        var conf = value;
+        if (typeof value === 'string') conf = value.split(/ *\|\|\|\| */);
+        if (Array.isArray(conf) && conf.length === 1) conf = conf[0];
 
         try {
-          fn(cache[value] = compileTranslation(str, locale, opts));
+          fn(cache[JSON.stringify(conf)] = compileTranslation(conf, locale, opts));
         } catch (err) {
           console.error(err.stack || err.message || err);
           fn();

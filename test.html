@@ -8,16 +8,31 @@
     <div data-hyper=".translations as t">
 
       <div data-hyper-translate="t.simple"></div>
+
       <div data-hyper-translate="t.param <- .username"></div>
+
       <div data-ng-scope data-ng-init="foo = {smart_count: 0}">
         <input data-ng-model="foo.smart_count" type="number" />
         <span data-hyper-translate="t.cars <- foo.smart_count"></span>
       </div>
+
+      <div data-ng-scope data-ng-init="goal = {smart_count: 0}">
+        <input data-ng-model="goal.smart_count" type="number" />
+        <span data-hyper-translate="t.goals <- goal.smart_count"></span>
+      </div>
+
       <div data-ng-scope data-ng-init="templateValue = 'templated'">
         <input data-ng-model="templateValue" />
         <span data-hyper-translate="t.{{templateValue}}"></span>
       </div>
+
+      <div data-ng-scope data-ng-init="name = 'Mike'">
+        <input data-ng-model="name" />
+        <span data-hyper-translate="t.param <- name as username"></span>
+      </div>
+
       <input type=submit data-hyper-translate="value -> t.create" />
+
       <div data-hyper-translate="t.param <- .username">
         <span name="username">
           <a href="#" data-ng-bind="username"></a>
@@ -46,6 +61,13 @@
           '%{smart_count} car',
           '%{smart_count} cars'
         ],
+        goals: {
+          _format: 'ordinal',
+          one: '%{smart_count}st goal',
+          two: '%{smart_count}nd goal',
+          few: '%{smart_count}rd goal',
+          other: '%{smart_count}th goal'
+        },
         create: 'Create'
       };
 

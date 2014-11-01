@@ -180,6 +180,278 @@ function initObj(obj, keys, ignoreKey) {
 
 });
 
+require.register("lang-js~cardinal@0.1.2", function (exports, module) {
+var e = exports;
+
+function augment(fn, list) {
+  fn.count = list.length;
+  fn.formats = list;
+}
+
+augment(e.af =
+ e.asa =
+ e.az =
+ e.bem =
+ e.bez =
+ e.bg =
+ e.brx =
+ e.cgg =
+ e.chr =
+ e.ee =
+ e.el =
+ e.eo =
+ e.es =
+ e.eu =
+ e.fo =
+ e.fur =
+ e.gsw =
+ e.ha =
+ e.haw =
+ e.hu =
+ e.jgo =
+ e.jmc =
+ e.ka =
+ e.kk =
+ e.kkj =
+ e.kl =
+ e.ks =
+ e.ksb =
+ e.ky =
+ e.lg =
+ e.mas =
+ e.mgo =
+ e.ml =
+ e.mn =
+ e.nb =
+ e.nd =
+ e.ne =
+ e.nn =
+ e.nnh =
+ e.nr =
+ e.nyn =
+ e.om =
+ e.or =
+ e.os =
+ e.ps =
+ e.rm =
+ e.rof =
+ e.rwk =
+ e.saq =
+ e.seh =
+ e.sn =
+ e.so =
+ e.sq =
+ e.ss =
+ e.ssy =
+ e.st =
+ e.ta =
+ e.te =
+ e.teo =
+ e.tig =
+ e.tn =
+ e.tr =
+ e.ts =
+ e.ug =
+ e.uz =
+ e.ve =
+ e.vo =
+ e.vun =
+ e.wae =
+ e.xh =
+ e.xog = function af(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ak =
+ e.ln =
+ e.mg =
+ e.nso =
+ e.pa =
+ e.ti = function ak(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===Math.floor(n)&&n>=0&&n<=1)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.am =
+ e.bn =
+ e.fa =
+ e.gu =
+ e.hi =
+ e.kn =
+ e.mr =
+ e.zu = function am(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i===0||n===1)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ar = function ar(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===0)return"zero";if(n===1)return"one";if(n===2)return"two";if(n%100===Math.floor(n%100)&&n%100>=3&&n%100<=10)return"few";if(n%100===Math.floor(n%100)&&n%100>=11&&n%100<=99)return"many";return"other"
+}, ["zero","one","two","few","many","other"]);
+
+augment(e.as =
+ e.ast =
+ e.ca =
+ e.de =
+ e.en =
+ e.et =
+ e.fi =
+ e.fy =
+ e.gl =
+ e.it =
+ e.nl =
+ e.sv =
+ e.sw =
+ e.ur = function as(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(i===1&&v===0)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.be = function be(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n%10===1&&!(n%100===11))return"one";if(n%10===Math.floor(n%10)&&n%10>=2&&n%10<=4&&!(n%100>=12&&n%100<=14))return"few";if(n%10===0||n%10===Math.floor(n%10)&&n%10>=5&&n%10<=9||n%100===Math.floor(n%100)&&n%100>=11&&n%100<=14)return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.bm =
+ e.bo =
+ e.dz =
+ e.id =
+ e.ig =
+ e.ii =
+ e.ja =
+ e.kde =
+ e.kea =
+ e.km =
+ e.ko =
+ e.lkt =
+ e.lo =
+ e.ms =
+ e.my =
+ e.root =
+ e.sah =
+ e.ses =
+ e.sg =
+ e.th =
+ e.to =
+ e.vi =
+ e.yo =
+ e.zh = function bm(n) {
+return"other"
+}, ["other"]);
+
+augment(e.br = function br(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n%10===1&&!(n%100===11||n%100===71||n%100===91))return"one";if(n%10===2&&!(n%100===12||n%100===72||n%100===92))return"two";if(n%10===Math.floor(n%10)&&(n%10>=3&&n%10<=4||n%10===9)&&!(n%100>=10&&n%100<=19||n%100>=70&&n%100<=79||n%100>=90&&n%100<=99))return"few";if(!(n===0)&&n%1e6===0)return"many";return"other"
+}, ["one","two","few","many","other"]);
+
+augment(e.bs =
+ e.hr =
+ e.sr = function bs(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length,f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(v===0&&i%10===1&&(!(i%100===11)||f%10===1&&!(f%100===11)))return"one";if(v===0&&i%10===Math.floor(i%10)&&i%10>=2&&i%10<=4&&(!(i%100>=12&&i%100<=14)||f%10===Math.floor(f%10)&&f%10>=2&&f%10<=4&&!(f%100>=12&&f%100<=14)))return"few";return"other"
+}, ["one","few","other"]);
+
+augment(e.cs =
+ e.sk = function cs(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(i===1&&v===0)return"one";if(i===Math.floor(i)&&i>=2&&i<=4&&v===0)return"few";if(!(v===0))return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.cy = function cy(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===0)return"zero";if(n===1)return"one";if(n===2)return"two";if(n===3)return"few";if(n===6)return"many";return"other"
+}, ["zero","one","two","few","many","other"]);
+
+augment(e.da = function da(n) {
+var i=Math.floor(Math.abs(n)),t=parseInt(n.toString().replace(/^[^.]*\.?|0+$/g,""),10);if(typeof n==="string")n=parseInt(n,10);if(n===1||!(t===0)&&(i===0||i===1))return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ff =
+ e.fr =
+ e.hy =
+ e.kab = function ff(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i===0||i===1)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.fil = function fil(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length,f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(v===0&&(i===1||i===2||i===3||v===0&&(!(i%10===4||i%10===6||i%10===9)||!(v===0)&&!(f%10===4||f%10===6||f%10===9))))return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ga = function ga(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n===2)return"two";if(n===Math.floor(n)&&n>=3&&n<=6)return"few";if(n===Math.floor(n)&&n>=7&&n<=10)return"many";return"other"
+}, ["one","two","few","many","other"]);
+
+augment(e.gd = function gd(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1||n===11)return"one";if(n===2||n===12)return"two";if(n===Math.floor(n)&&(n>=3&&n<=10||n>=13&&n<=19))return"few";return"other"
+}, ["one","two","few","other"]);
+
+augment(e.gv = function gv(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(v===0&&i%10===1)return"one";if(v===0&&i%10===2)return"two";if(v===0&&(i%100===0||i%100===20||i%100===40||i%100===60||i%100===80))return"few";if(!(v===0))return"many";return"other"
+}, ["one","two","few","many","other"]);
+
+augment(e.he = function he(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(i===1&&v===0)return"one";if(i===2&&v===0)return"two";if(v===0&&!(n>=0&&n<=10)&&n%10===0)return"many";return"other"
+}, ["one","two","many","other"]);
+
+augment(e.is = function is(n) {
+var i=Math.floor(Math.abs(n)),t=parseInt(n.toString().replace(/^[^.]*\.?|0+$/g,""),10);if(typeof n==="string")n=parseInt(n,10);if(t===0&&i%10===1&&(!(i%100===11)||!(t===0)))return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ksh = function ksh(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===0)return"zero";if(n===1)return"one";return"other"
+}, ["zero","one","other"]);
+
+augment(e.kw =
+ e.naq =
+ e.se = function kw(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n===2)return"two";return"other"
+}, ["one","two","other"]);
+
+augment(e.lag = function lag(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(n===0)return"zero";if((i===0||i===1)&&!(n===0))return"one";return"other"
+}, ["zero","one","other"]);
+
+augment(e.lt = function lt(n) {
+var f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(n%10===1&&!(n%100>=11&&n%100<=19))return"one";if(n%10===Math.floor(n%10)&&n%10>=2&&n%10<=9&&!(n%100>=11&&n%100<=19))return"few";if(!(f===0))return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.lv = function lv(n) {
+var v=n.toString().replace(/^[^.]*\.?/,"").length,f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(n%10===0||n%100===Math.floor(n%100)&&n%100>=11&&n%100<=19||v===2&&f%100===Math.floor(f%100)&&f%100>=11&&f%100<=19)return"zero";if(n%10===1&&(!(n%100===11)||v===2&&f%10===1&&(!(f%100===11)||!(v===2)&&f%10===1)))return"one";return"other"
+}, ["zero","one","other"]);
+
+augment(e.mk = function mk(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length,f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(v===0&&(i%10===1||f%10===1))return"one";return"other"
+}, ["one","other"]);
+
+augment(e.mt = function mt(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n===0||n%100===Math.floor(n%100)&&n%100>=2&&n%100<=10)return"few";if(n%100===Math.floor(n%100)&&n%100>=11&&n%100<=19)return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.pl = function pl(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(i===1&&v===0)return"one";if(v===0&&i%10===Math.floor(i%10)&&i%10>=2&&i%10<=4&&!(i%100>=12&&i%100<=14))return"few";if(v===0&&!(i===1)&&(i%10===Math.floor(i%10)&&i%10>=0&&i%10<=1||v===0&&(i%10===Math.floor(i%10)&&i%10>=5&&i%10<=9||v===0&&i%100===Math.floor(i%100)&&i%100>=12&&i%100<=14)))return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.pt = function pt(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length,t=parseInt(n.toString().replace(/^[^.]*\.?|0+$/g,""),10);if(typeof n==="string")n=parseInt(n,10);if(i===1&&(v===0||i===0&&t===1))return"one";return"other"
+}, ["one","other"]);
+
+augment(e.ro = function ro(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(i===1&&v===0)return"one";if(!(v===0)||n===0||!(n===1)&&n%100===Math.floor(n%100)&&n%100>=1&&n%100<=19)return"few";return"other"
+}, ["one","few","other"]);
+
+augment(e.ru =
+ e.uk = function ru(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(v===0&&i%10===1&&!(i%100===11))return"one";if(v===0&&i%10===Math.floor(i%10)&&i%10>=2&&i%10<=4&&!(i%100>=12&&i%100<=14))return"few";if(v===0&&(i%10===0||v===0&&(i%10===Math.floor(i%10)&&i%10>=5&&i%10<=9||v===0&&i%100===Math.floor(i%100)&&i%100>=11&&i%100<=14)))return"many";return"other"
+}, ["one","few","many","other"]);
+
+augment(e.shi = function shi(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i===0||n===1)return"one";if(n===Math.floor(n)&&n>=2&&n<=10)return"few";return"other"
+}, ["one","few","other"]);
+
+augment(e.si = function si(n) {
+var i=Math.floor(Math.abs(n)),f=parseInt(n.toString().replace(/^[^.]*\.?/,""),10);if(typeof n==="string")n=parseInt(n,10);if(n===0||n===1||i===0&&f===1)return"one";return"other"
+}, ["one","other"]);
+
+augment(e.sl = function sl(n) {
+var i=Math.floor(Math.abs(n)),v=n.toString().replace(/^[^.]*\.?/,"").length;if(typeof n==="string")n=parseInt(n,10);if(v===0&&i%100===1)return"one";if(v===0&&i%100===2)return"two";if(v===0&&(i%100===Math.floor(i%100)&&i%100>=3&&i%100<=4||!(v===0)))return"few";return"other"
+}, ["one","two","few","other"]);
+
+augment(e.tzm = function tzm(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===Math.floor(n)&&n>=0&&n<=1||n===Math.floor(n)&&n>=11&&n<=99)return"one";return"other"
+}, ["one","other"]);
+});
+
 require.register("lang-js~interpolate@1.0.1", function (exports, module) {
 /**
  * Expose the compile function
@@ -308,301 +580,137 @@ function formatProperty(prop, params) {
 
 });
 
-require.register("lang-js~plural@1.0.0", function (exports, module) {
-/**
- * Pulled from the awesome http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html?id=l10n/pluralforms
- */
-
+require.register("lang-js~ordinal@0.1.2", function (exports, module) {
 var e = exports;
 
-/**
- * Chinese
- */
+function augment(fn, list) {
+  fn.count = list.length;
+  fn.formats = list;
+}
 
-(e.ay =
-e.bo =
-e.cgg =
-e.dz =
-e.fa =
-e.id =
-e.ja =
-e.jbo =
-e.ka =
-e.kk =
-e.km =
-e.ko =
-e.ky =
-e.lo =
-e.ms =
-e.my =
-e.sah =
-e.su =
-e.th =
-e.tt =
-e.ug =
-e.vi =
-e.wo =
-e.zh = function zh(n) {
-  return 0;
-}).count = 1;
+augment(e.af =
+ e.am =
+ e.ar =
+ e.bg =
+ e.cs =
+ e.da =
+ e.de =
+ e.el =
+ e.es =
+ e.et =
+ e.eu =
+ e.fa =
+ e.fi =
+ e.fy =
+ e.gl =
+ e.he =
+ e.hr =
+ e.id =
+ e.is =
+ e.ja =
+ e.km =
+ e.kn =
+ e.ko =
+ e.ky =
+ e.lt =
+ e.lv =
+ e.ml =
+ e.mn =
+ e.my =
+ e.nb =
+ e.nl =
+ e.pa =
+ e.pl =
+ e.pt =
+ e.root =
+ e.ru =
+ e.si =
+ e.sk =
+ e.sl =
+ e.sr =
+ e.sw =
+ e.ta =
+ e.te =
+ e.th =
+ e.tr =
+ e.uk =
+ e.ur =
+ e.uz =
+ e.zh =
+ e.zu = function af(n) {
+return"other"
+}, ["other"]);
 
-/**
- * German
- */
+augment(e.az = function az(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i%10===1||i%10===2||i%10===5||i%10===7||i%10===8||i%100===20||i%100===50||i%100===70||i%100===80)return"one";if(i%10===3||i%10===4||i%1e3===100||i%1e3===200||i%1e3===300||i%1e3===400||i%1e3===500||i%1e3===600||i%1e3===700||i%1e3===800||i%1e3===900)return"few";if(i===0||i%10===6||i%100===40||i%100===60||i%100===90)return"many";return"other"
+}, ["one","few","many","other"]);
 
-(e.af =
-e.an =
-e.anp =
-e.as =
-e.ast =
-e.az =
-e.bg =
-e.bn =
-e.brx =
-e.ca =
-e.da =
-e.de =
-e.doi =
-e.el =
-e.en =
-e.eo =
-e.es =
-e.et =
-e.eu =
-e.ff =
-e.fi =
-e.fo =
-e.fur =
-e.fy =
-e.gl =
-e.gu =
-e.ha =
-e.he =
-e.hi =
-e.hna =
-e.hu =
-e.hy =
-e.ia =
-e.it =
-e.kl =
-e.kn =
-e.ku =
-e.lb =
-e.mai =
-e.ml =
-e.mn =
-e.mni =
-e.mr =
-e.nah =
-e.nap =
-e.nb =
-e.ne =
-e.nl =
-e.nn =
-e.no =
-e.nso =
-e.or =
-e.pa =
-e.pap =
-e.pms =
-e.ps =
-e.pt =
-e.rm =
-e.rw =
-e.sat =
-e.sco =
-e.sd =
-e.se =
-e.si =
-e.so =
-e.son =
-e.sq =
-e.sw =
-e.sv =
-e.ta =
-e.te =
-e.tk =
-e.ur =
-e.yo = function de(n) {
-  return n !== 1 ? 1 : 0;
-}).count = 2;
+augment(e.bn = function bn(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1||n===5||n===7||n===8||n===9||n===10)return"one";if(n===2||n===3)return"two";if(n===4)return"few";if(n===6)return"many";return"other"
+}, ["one","two","few","many","other"]);
 
-/**
- * French
- */
+augment(e.ca = function ca(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1||n===3)return"one";if(n===2)return"two";if(n===4)return"few";return"other"
+}, ["one","two","few","other"]);
 
-(e.ach =
-e.ak =
-e.am =
-e.arn =
-e.br =
-e.fil =
-e.fr =
-e.gun =
-e.ln =
-e.mfe =
-e.mg =
-e.mi =
-e.oc =
-e.pt_BR =
-e.tg =
-e.ti =
-e.tr =
-e.uz =
-e.wa = function fr(n) {
-  return n > 1 ? 1 : 0;
-}).count = 2;
+augment(e.cy = function cy(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===0||n===7||n===8||n===9)return"zero";if(n===1)return"one";if(n===2)return"two";if(n===3||n===4)return"few";if(n===5||n===6)return"many";return"other"
+}, ["zero","one","two","few","many","other"]);
 
-/**
- * Arabic
- */
+augment(e.en = function en(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n%10===1&&!(n%100===11))return"one";if(n%10===2&&!(n%100===12))return"two";if(n%10===3&&!(n%100===13))return"few";return"other"
+}, ["one","two","few","other"]);
 
-(e.ar = function ar(n) {
-  return n === 0 ? 0 : n === 1 ? 1 : n === 2 ? 2 : n % 100 >= 3 && n % 100 <= 10 ? 3 : n % 100 >= 11 ? 4 : 5;
-}).count = 6;
+augment(e.fil =
+ e.fr =
+ e.hy =
+ e.lo =
+ e.ms =
+ e.ro =
+ e.vi = function fil(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";return"other"
+}, ["one","other"]);
 
-/**
- * Russian
- */
+augment(e.gu =
+ e.hi = function gu(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n===2||n===3)return"two";if(n===4)return"few";if(n===6)return"many";return"other"
+}, ["one","two","few","many","other"]);
 
-(e.be =
-e.bs =
-e.hr =
-e.ru =
-e.sr =
-e.uk = function ru(n) {
-  return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-}).count = 3;
+augment(e.hu = function hu(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1||n===5)return"one";return"other"
+}, ["one","other"]);
 
-/**
- * Czech
- */
+augment(e.it = function it(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===11||n===8||n===80||n===800)return"many";return"other"
+}, ["many","other"]);
 
-(e.cs =
-e.sk = function cs(n) {
-  return (n === 1) ? 0 : (n >= 2 && n <= 4) ? 1 : 2;
-}).count = 3;
+augment(e.ka = function ka(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i===1)return"one";if(i===0||i%100===Math.floor(i%100)&&(i%100>=2&&i%100<=20||i%100===40||i%100===60||i%100===80))return"many";return"other"
+}, ["one","many","other"]);
 
-/**
- * Kashubian
- */
+augment(e.kk = function kk(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n%10===6||n%10===9||n%10===0&&!(n===0))return"many";return"other"
+}, ["many","other"]);
 
-(e.csb = function csb(n) {
-  return (n === 1) ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-}).count = 3;
+augment(e.mk = function mk(n) {
+var i=Math.floor(Math.abs(n));if(typeof n==="string")n=parseInt(n,10);if(i%10===1&&!(i%100===11))return"one";if(i%10===2&&!(i%100===12))return"two";if((i%10===7||i%10===8)&&!(i%100===17||i%100===18))return"many";return"other"
+}, ["one","two","many","other"]);
 
-/**
- * Polish
- */
+augment(e.mr = function mr(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n===2||n===3)return"two";if(n===4)return"few";return"other"
+}, ["one","two","few","other"]);
 
-(e.pl = function pl(n) {
-  return n === 1 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-}).count = 3;
+augment(e.ne = function ne(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===Math.floor(n)&&n>=1&&n<=4)return"one";return"other"
+}, ["one","other"]);
 
-/**
- * Icelandic
- */
+augment(e.sq = function sq(n) {
+if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n%10===4&&!(n%100===14))return"many";return"other"
+}, ["one","many","other"]);
 
-(e.is = function is(n) {
-  return (n % 10 !== 1 || n % 100 === 11) ? 1 : 0;
-}).count = 2;
-
-/**
- * Welsh
- */
-
-(e.cy = function cy(n) {
-  return (n === 1) ? 0 : (n === 2) ? 1 : (n !== 8 && n !== 11) ? 2 : 3;
-}).count = 4;
-
-/**
- * Irish
- */
-
-(e.ga = function ga(n) {
-  return (n === 1) ? 0 : n === 2 ? 1 : n < 7 ? 2 : n < 11 ? 3 : 4;
-}).count = 5;
-
-/**
- * Scottish Gaelic
- */
-
-(e.gd = function gd(n) {
-  return (n === 1 || n === 11) ? 0 : (n === 2 || n === 12) ? 1 : (n > 2 && n < 20) ? 2 : 3;
-}).count = 4;
-
-/**
- * Croatian
- */
-
-(e.hr = function hr(n) {
-  return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-}).count = 3;
-
-/**
- * Cornish
- */
-
-(e.kw = function kw(n) {
-  return (n === 1) ? 0 : (n === 2) ? 1 : (n === 3) ? 2 : 3;
-}).count = 4;
-
-/**
- * Lithuanian
- */
-
-(e.lt = function lt(n) {
-  return n % 10 === 1 && n % 100 !== 11 ? 0 : n % 10 >= 2 && (n % 100 < 10 || n % 100 >= 20) ? 1 : 2;
-}).count = 3;
-
-/**
- * Latvian
- */
-
-(e.lv = function lv(n) {
-  return n % 10 === 1 && n % 100 !== 11 ? 0 : n !== 0 ? 1 : 2;
-}).count = 3;
-
-/**
- * Mandinka
- */
-
-(e.mnk = function mnk(n) {
-  return n === 0 ? 0 : n === 1 ? 1 : 2;
-}).count = 3;
-
-/**
- * Maltese
- */
-
-(e.mt = function mt(n) {
-  return n === 1 ? 0 : n === 0 || ( n % 100 > 1 && n % 100 < 11) ? 1 : (n % 100 > 10 && n % 100 < 20 ) ? 2 : 3;
-}).count = 4;
-
-/**
- * Romanian
- */
-
-(e.ro = function ro(n) {
-  return n === 1 ? 0 : (n === 0 || (n % 100 > 0 && n % 100 < 20)) ? 1 : 2;
-}).count = 3;
-
-/**
- * Slovenian
- */
-
-(e.sl = function sl(n) {
-  return n % 100 === 1 ? 1 : n % 100 === 2 ? 2 : n % 100 === 3 || n % 100 === 4 ? 3 : 0;
-}).count = 4;
-
-/**
- * Macedonian
- */
-
-(e.mk = function mk(n) {
-  return n % 10 === 1 ? 0 : n % 10 === 2 ? 1 : 2;
-}).count = 3;
-
+augment(e.sv = function sv(n) {
+if(typeof n==="string")n=parseInt(n,10);if((n%10===1||n%10===2)&&!(n%100===11||n%100===12))return"one";return"other"
+}, ["one","other"]);
 });
 
 require.register("lang-js~translate@1.0.1", function (exports, module) {
@@ -610,7 +718,10 @@ require.register("lang-js~translate@1.0.1", function (exports, module) {
  * Module dependencies
  */
 
-var plural = require('lang-js~plural@1.0.0');
+var plural = {
+  cardinal: require('lang-js~cardinal@0.1.2'),
+  ordinal: require('lang-js~ordinal@0.1.2')
+};
 var interpolate = require('lang-js~interpolate@1.0.1');
 var reduce = require('directiv~core-reduce@1.0.0');
 
@@ -623,39 +734,70 @@ exports = module.exports = translate;
 /**
  * Compile a translation function
  *
- * @param {String|Array} arr
+ * @param {String|Array|Object} cldr
  * @param {String} locale
  * @param {Object?} opts
  * @return {Function}
  */
 
-function translate(arr, locale, opts) {
-  if (typeof arr === 'string') return augment(interpolate(arr, opts));
+function translate(cldr, locale, opts) {
+  if (typeof cldr === 'string') return augment(interpolate(cldr, opts));
 
   opts = opts || {};
 
-  var fn = lookup(locale);
-  if (fn.count !== arr.length) throw new Error('missing required length of plural formats: expected ' + fn.count + '; got ' + arr.length);
+  var pluralize = lookup(locale, cldr._format || opts.pluralFormat);
+  if (Array.isArray(cldr)) cldr = convertArray(cldr, pluralize, opts);
 
-  var fns = [];
+  validate(cldr, pluralize);
+
   var paramsObj = {};
-  for (var i = 0, l = arr.length, t; i < l; i++) {
-    t = interpolate(arr[i], opts);
-    fns.push(t);
-    merge(paramsObj, t.params);
-  }
+  var cases = toFunctions(cldr, pluralize, opts, paramsObj);
 
-  var key = opts.pluralKey || 'smart_count';
+  var key = cldr._plural_key || opts.pluralKey || 'smart_count';
   var validatePluralKey = typeof opts.validatePluralKey === 'undefined' ? true : opts.validatePluralKey;
 
   return augment(function(params) {
-    if (typeof params === 'number') params = convert(params, key);
+    if (typeof params === 'number') params = convertSmartCount(params, key);
 
     var count = parseInt(params[key], 10);
     if (validatePluralKey && isNaN(count)) throw new Error('expected "' + key + '" to be a number. got "' + (typeof params[key]) + '".');
 
-    return fns[fn(count || 0)](params);
+    return (cases[count] || cases[pluralize(count || 0)])(params);
   }, Object.keys(paramsObj));
+}
+
+/**
+ * Validate a cldr against a pluralize function
+ *
+ * @param {Object} cldr
+ * @param {Function} pluralize
+ */
+
+function validate(cldr, pluralize) {
+  pluralize.formats.forEach(function(key) {
+    if (!cldr[key]) throw new Error('translation object missing required key "' + key + '"');
+  });
+}
+
+/**
+ * Convert a cldr object to an object of functions
+ *
+ * @param {Object} cldr
+ * @param {Function} pluralize
+ * @param {Object} opts
+ * @param {Object} paramsObj
+ * @return {Object}
+ */
+
+function toFunctions(cldr, pluralize, opts, paramsObj) {
+  return Object.keys(cldr).reduce(function(acc, key) {
+    if (key.indexOf('_') === 0) return acc;
+    var value = cldr[key];
+    if (typeof value !== 'string') return acc;
+    var t = acc[key] = interpolate(value, opts);
+    merge(paramsObj, t.params);
+    return acc;
+  }, {});
 }
 
 /**
@@ -678,17 +820,39 @@ function augment(fn, keys) {
  * Lookup the plural function given a locale
  *
  * @param {String} locale
+ * @param {String} format
  * @return {Function}
  */
 
-function lookup(locale) {
+function lookup(locale, format) {
   if (!locale) throw new Error('missing required "locale" parameter');
-  var fn = plural[locale];
+  format = format || 'cardinal';
+  var p = plural[format];
+  if (!p) throw new Error('unsupported plural format "' + format + '"');
+  var fn = p[locale];
   if (fn) return fn;
   fn = plural[locale.split(/[\-_]/)[0]];
   if (fn) return fn;
 
   throw new Error('unsupported locale "' + locale + '"');
+}
+
+/**
+ * Convert an array input to a CLDR object
+ *
+ * @param {Array} arr
+ * @param {Function} pluralize
+ * @param {Object} opts
+ * @return {Object}
+ */
+
+function convertArray(arr, pluralize, opts) {
+  if (arr.length !== pluralize.count) throw new Error('missing required length of plural formats: expected ' + pluralize.count + '; got ' + arr.length);
+
+  return pluralize.formats.reduce(function(acc, key, i) {
+    acc[key] = arr[i];
+    return acc;
+  }, {});
 }
 
 /**
@@ -699,7 +863,7 @@ function lookup(locale) {
  * @return {Object}
  */
 
-function convert(val, key) {
+function convertSmartCount(val, key) {
   var obj = {};
   obj[key] = val;
   return obj;
@@ -764,11 +928,12 @@ pkg.factory('hyperTranslate', [
         if (!value) return fn();
         if (cache[value]) return fn(cache[value] );
 
-        var arr = Array.isArray(value) ? value : value.split(/ *\|\|\|\| */);
-        var str = arr.length > 1 ? arr : value;
+        var conf = value;
+        if (typeof value === 'string') conf = value.split(/ *\|\|\|\| */);
+        if (Array.isArray(conf) && conf.length === 1) conf = conf[0];
 
         try {
-          fn(cache[value] = compileTranslation(str, locale, opts));
+          fn(cache[JSON.stringify(conf)] = compileTranslation(conf, locale, opts));
         } catch (err) {
           console.error(err.stack || err.message || err);
           fn();

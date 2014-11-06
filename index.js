@@ -80,6 +80,10 @@ pkg.directive('hyperTranslate', [
       elem.append(child);
     }
 
+    function setHtmlText(elem, $scope, str) {
+      elem.html(str);
+    }
+
     return {
       restrict: 'A',
       scope: true,
@@ -87,9 +91,10 @@ pkg.directive('hyperTranslate', [
       compile: function compile(tElem, tAttrs, transclude) {
         var templates = childrenToParams(tElem.children());
         tElem.html('');
+        var hasTemplates = !!Object.keys(templates).length;
 
         return function link($scope, elem, attrs) {
-          var $setHtml = setHtml.bind(null, elem);
+          var $setHtml = (hasTemplates ? setHtml : setHtmlText).bind(null, elem);
           var $setAttr = elem.attr.bind(elem);
           var $tmp;
           $scope.$watch(function() {

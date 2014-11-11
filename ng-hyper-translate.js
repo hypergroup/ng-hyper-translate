@@ -138,134 +138,6 @@ require.define = function (name, exports) {
     exports: exports
   };
 };
-require.register("lang-js~interpolate@1.0.1", function (exports, module) {
-/**
- * Expose the compile function
- */
-
-exports = module.exports = compile;
-
-/**
- * Expose the interpolate function
- */
-
-exports.interpolate = interpolate;
-
-/**
- * Interpolate a string without a compilation step
- *
- * THIS IS NOT RECOMMENDED FOR PRODUCTION USE
- *
- * @param {String} string
- * @param {Object?} params
- * @param {Object?} opts
- */
-
-function interpolate(string, params, opts) {
-  return compile(string, opts)(params).join('');
-};
-
-/**
- * Compile a string into an interpolate function
- *
- * @param {String} string
- * @param {Object?} opts
- * @return {Function}
- */
-
-function compile(string, opts) {
-  opts = opts || {};
-  var open = escapeRegex(opts.open || '%{');
-  var close = opts.close || '}';
-  var char = close.charAt(0);
-  var re = new RegExp('(' + escapeRegex(open) + ' *[^' + escapeRegex(char) + ']+ *' + escapeRegex(close) + ')', 'g');
-
-  var params = 'params';
-
-  var fallback = opts.fallback ?
-        ' || ' + JSON.stringify(opts.fallback) :
-        '';
-
-  var rawParts = string.split(re);
-  var parts = [], paramsObj = {};
-  for (var i = 0, l = rawParts.length, part, prop; i < l; i++) {
-    part = rawParts[i];
-
-    // skip the blank parts
-    if (!part) continue;
-
-    // it's normal text
-    if (part.indexOf(open) !== 0 && part.indexOf(close) !== part.length - close.length) {
-      parts.push(JSON.stringify(part));
-      continue;
-    }
-
-    // it's a interpolation part
-    part = part.slice(open.length, -close.length);
-    prop = formatProperty(part, params);
-    part = prop[1] || part;
-    paramsObj[part] = (paramsObj[part] || 0) + 1;
-    parts.push(prop[0] + fallback);
-  }
-
-  var fn = new Function('exec, ' + params,
-    params + ' = ' + params + ' || {};\nreturn [' + parts.join(', ') + '];').bind(null, exec);
-  fn.params = paramsObj;
-  return fn;
-}
-
-/**
- * Execute a function for a block
- *
- * @param {String} name
- * @param {String} contents
- * @param {Object} params
- * @return {Any}
- */
-
-function exec(name, contents, params) {
-  var fn = params[name];
-  var type = typeof fn;
-  if (type === 'function') return fn(contents, params);
-  return type === 'undefined' ? contents : fn;
-}
-
-/**
- * Escape any reserved regex characters
- *
- * @param {String} str
- * @return {String}
- */
-
-function escapeRegex(str) {
-  return str.replace(/[\^\-\]\\]/g, function(c) {
-    return '\\' + c;
-  });
-}
-
-/**
- * Format a property accessor
- *
- * @param {String} prop
- * @param {String} params
- * @return {String}
- */
-
-var re = /^[\w\d]+$/;
-function formatProperty(prop, params) {
-  if (!re.test(prop)) {
-    var parts = prop.split(/ *: */);
-    if (parts.length === 1) return [params + '[' + JSON.stringify(prop) + ']'];
-
-    return ['exec("' + parts[0] + '", "' + parts[1] + '", ' + params + ')', parts[0]];
-  }
-  var int = parseInt(prop, 10);
-  if (isNaN(int)) return [params + '.' + prop];
-  return [params + '[' + prop + ']'];
-}
-
-});
-
 require.register("directiv~core-reduce@1.0.0", function (exports, module) {
 /**
  * Compile an object reducer
@@ -580,6 +452,134 @@ if(typeof n==="string")n=parseInt(n,10);if(n===Math.floor(n)&&n>=0&&n<=1||n===Ma
 }, ["one","other"]);
 });
 
+require.register("lang-js~interpolate@1.0.1", function (exports, module) {
+/**
+ * Expose the compile function
+ */
+
+exports = module.exports = compile;
+
+/**
+ * Expose the interpolate function
+ */
+
+exports.interpolate = interpolate;
+
+/**
+ * Interpolate a string without a compilation step
+ *
+ * THIS IS NOT RECOMMENDED FOR PRODUCTION USE
+ *
+ * @param {String} string
+ * @param {Object?} params
+ * @param {Object?} opts
+ */
+
+function interpolate(string, params, opts) {
+  return compile(string, opts)(params).join('');
+};
+
+/**
+ * Compile a string into an interpolate function
+ *
+ * @param {String} string
+ * @param {Object?} opts
+ * @return {Function}
+ */
+
+function compile(string, opts) {
+  opts = opts || {};
+  var open = escapeRegex(opts.open || '%{');
+  var close = opts.close || '}';
+  var char = close.charAt(0);
+  var re = new RegExp('(' + escapeRegex(open) + ' *[^' + escapeRegex(char) + ']+ *' + escapeRegex(close) + ')', 'g');
+
+  var params = 'params';
+
+  var fallback = opts.fallback ?
+        ' || ' + JSON.stringify(opts.fallback) :
+        '';
+
+  var rawParts = string.split(re);
+  var parts = [], paramsObj = {};
+  for (var i = 0, l = rawParts.length, part, prop; i < l; i++) {
+    part = rawParts[i];
+
+    // skip the blank parts
+    if (!part) continue;
+
+    // it's normal text
+    if (part.indexOf(open) !== 0 && part.indexOf(close) !== part.length - close.length) {
+      parts.push(JSON.stringify(part));
+      continue;
+    }
+
+    // it's a interpolation part
+    part = part.slice(open.length, -close.length);
+    prop = formatProperty(part, params);
+    part = prop[1] || part;
+    paramsObj[part] = (paramsObj[part] || 0) + 1;
+    parts.push(prop[0] + fallback);
+  }
+
+  var fn = new Function('exec, ' + params,
+    params + ' = ' + params + ' || {};\nreturn [' + parts.join(', ') + '];').bind(null, exec);
+  fn.params = paramsObj;
+  return fn;
+}
+
+/**
+ * Execute a function for a block
+ *
+ * @param {String} name
+ * @param {String} contents
+ * @param {Object} params
+ * @return {Any}
+ */
+
+function exec(name, contents, params) {
+  var fn = params[name];
+  var type = typeof fn;
+  if (type === 'function') return fn(contents, params);
+  return type === 'undefined' ? contents : fn;
+}
+
+/**
+ * Escape any reserved regex characters
+ *
+ * @param {String} str
+ * @return {String}
+ */
+
+function escapeRegex(str) {
+  return str.replace(/[\^\-\]\\]/g, function(c) {
+    return '\\' + c;
+  });
+}
+
+/**
+ * Format a property accessor
+ *
+ * @param {String} prop
+ * @param {String} params
+ * @return {String}
+ */
+
+var re = /^[\w\d]+$/;
+function formatProperty(prop, params) {
+  if (!re.test(prop)) {
+    var parts = prop.split(/ *: */);
+    if (parts.length === 1) return [params + '[' + JSON.stringify(prop) + ']'];
+
+    return ['exec("' + parts[0] + '", "' + parts[1] + '", ' + params + ')', parts[0]];
+  }
+  var int = parseInt(prop, 10);
+  if (isNaN(int)) return [params + '.' + prop];
+  return [params + '[' + prop + ']'];
+}
+
+});
+
 require.register("lang-js~ordinal@0.1.2", function (exports, module) {
 var e = exports;
 
@@ -884,6 +884,190 @@ function merge(a, b) {
 
 });
 
+require.register("lang-js~relative@1.0.1", function (exports, module) {
+/**
+ * Module dependencies
+ */
+
+var translate = require('lang-js~translate@1.0.2');
+
+/**
+ * Expose the relative function
+ */
+
+exports = module.exports = relative;
+
+/**
+ * Setup some default limits
+ */
+
+var defaultLimits = [
+  {div: 1, limit: 59, label: 's'},             // seconds
+  {div: 60, limit: 3599, label: 'm'},          // minutes
+  {div: 3600, limit: 86399, label: 'h'},       // hours
+  {div: 86400, limit: 2591999, label: 'd'},    // days
+  {div: 2592000, limit: 31103999, label: 'M'}, // months
+  {div: 31104000, limit: Infinity, label: 'y'} // years
+];
+
+/**
+ * Compile a relative function
+ *
+ * @param {Object} strings
+ * @param {String} locale
+ * @param {Object?} opts
+ * @return {Function}
+ */
+
+function relative(strings, locale, opts) {
+  opts = opts || {};
+  var key = opts.pluralKey = opts.pluralKey || strings._plural_key || 'time';
+  var limits = opts.limits || defaultLimits;
+
+  var past = {};
+  var future = {};
+
+  compile(strings, locale, 's', past, future, key, opts);
+  compile(strings, locale, 'm', past, future, key, opts);
+  compile(strings, locale, 'h', past, future, key, opts);
+  compile(strings, locale, 'd', past, future, key, opts);
+  compile(strings, locale, 'M', past, future, key, opts);
+  compile(strings, locale, 'y', past, future, key, opts);
+
+  /**
+   * Return a translated relative time based on the diff (in seconds)
+   *
+   * @param {Integer} diff
+   * @return {Array}
+   */
+
+  return function(params) {
+    var diff = getDiff(key, params);
+    if (diff === null) throw new Error('Missing relative time key "' + key + '"');
+    var duration = Math.abs(diff);
+
+    for (var i = 0, l = limits.length, t, fn; i < l; i++) {
+      t = limits[i];
+      if (t.limit < duration) continue;
+      fn = diff > 0 ? future[t.label] : past[t.label];
+      return fn(createParam(Math.floor(duration / t.div), key, params));
+    }
+  };
+}
+
+/**
+ * Compile a specific property (s, m, h, etc)
+ *
+ * @param {Object} strings
+ * @param {String} locale
+ * @param {String} prop
+ * @param {Object} past
+ * @param {Object} future
+ * @param {Object} opts
+ */
+
+function compile(strings, locale, prop, past, future, key, opts) {
+  var str = strings[prop];
+
+  if (str && strings.past && strings.future) return compileTenses(strings, str, locale, prop, past, future, key, opts);
+
+  if (str) return past[prop] = future[prop] = translate(str, locale, opts);
+
+  if (strings['+' + prop] && strings['-' + prop]) {
+    past[prop] = translate(strings['-' + prop], locale, opts);
+    future[prop] = translate(strings['+' + prop], locale, opts);
+    return;
+  }
+
+  if (!str) throw new Error('Missing "' + prop + '" for "' + locale + '"');
+}
+
+/**
+ * Compile a property, merging in future and past strings
+ *
+ * @param {Object} strings
+ * @param {String} str
+ * @param {String} locale
+ * @param {String} prop
+ * @param {Object} past
+ * @param {Object} future
+ * @param {String} key
+ * @param {Object} opts
+ */
+
+function compileTenses(strings, str, locale, prop, past, future, key, opts) {
+  var p = translate(strings.past, locale, opts);
+  var f = translate(strings.future, locale, opts);
+  var t = translate(str, locale, opts);
+
+  past[prop] = function(params) {
+    var time = t(params);
+    var res = p(createParam(time, key, params));
+    return flatten(res);
+  };
+
+  future[prop] = function(params) {
+    var time = t(params);
+    var res = f(createParam(time, key, params));
+    return flatten(res);
+  };
+}
+
+/**
+ * Flatten an array of arrays
+ *
+ * @param {Array} a
+ * @return {Array}
+ */
+
+function flatten(a) {
+  var arr = [];
+  for (var i = 0, l = a.length, t; i < l; i++) {
+    t = a[i];
+    if (Array.isArray(t)) Array.prototype.push.apply(arr, t);
+    else arr.push(t);
+  }
+
+  return arr;
+}
+
+/**
+ * Get the difference from the params
+ *
+ * @param {String} key
+ * @param {Object} params
+ * @return {Number}
+ */
+
+function getDiff(key, params) {
+  if (typeof params === 'number') return params;
+  if (!params) return null;
+  return params[key];
+}
+
+/**
+ * Create a parameter object with a key
+ *
+ * @param {Integer} time
+ * @param {String} key
+ * @return {Object}
+ */
+
+function createParam(time, key, params) {
+  var cloned = {};
+  if (typeof params === 'number') {
+    params = {};
+  } else {
+    for (var k in params) {
+      cloned[k] = params[k];
+    }
+  }
+  cloned[key] = time;
+  return cloned;
+}
+
+});
+
 require.register("ng-hyper-translate", function (exports, module) {
 /**
  * Module dependencies
@@ -891,6 +1075,7 @@ require.register("ng-hyper-translate", function (exports, module) {
 
 var angular = window.angular;
 var compileTranslation = require('lang-js~translate@1.0.2');
+var compileRelative = require('lang-js~relative@1.0.1');
 
 /**
  * Allow users to opt into displaying missing translation warnings
@@ -926,18 +1111,26 @@ pkg.factory('hyperTranslate', [
     return function(path, $scope, fn) {
       return hyper.get(path, $scope, function(value, req) {
         if (!value) return fn();
-        if (cache[value]) return fn(cache[value] );
+        if (cache[value]) return fn(cache[value]);
 
         var conf = value;
         if (typeof value === 'string') conf = value.split(/ *\|\|\|\| */);
         if (Array.isArray(conf) && conf.length === 1) conf = conf[0];
 
+        var format = conf._format;
+
+        var t;
+
         try {
-          fn(cache[JSON.stringify(conf)] = compileTranslation(conf, locale, opts));
+          t = cache[JSON.stringify(conf)] = format === 'relative' ?
+             compileRelative(conf, locale, opts) :
+             compileTranslation(conf, locale, opts);
         } catch (err) {
-          console.error(err.stack || err.message || err);
-          fn();
+          console.error(err);
+          return fn();
         };
+
+        fn(t, format);
       });
     };
   }
@@ -952,10 +1145,16 @@ pkg.directive('hyperTranslate', [
   '$compile',
   'hyper',
   function(lookup, $compile, hyper) {
-    function watchParams(params, $scope) {
+    function watchParams(params, $scope, opts) {
+      opts = opts || {};
       angular.forEach(params, function(path, target) {
-        hyper.get(path, $scope, function(value, req) {
-          $scope[target] = value;
+        hyper.get(path, $scope, function update(value, req) {
+          if (opts.format === 'relative', target === (opts.key || 'time') && value) {
+            $scope[target] = Math.floor((new Date(value) - new Date()) / 1000);
+            if (isNaN($scope[target])) $scope[target] = 0;
+          } else {
+            $scope[target] = value;
+          }
         });
       });
     }
@@ -1016,8 +1215,11 @@ function init(setHtml, setAttr, watchParams, lookup, $scope, tmplSrc, str) {
 
   // lookup the path to the translation in the translate service
   var template = noop;
-  lookup(path, $scope, function(fn) {
+  // TODO figure out how to pass the relative time key
+  var opts = {};
+  lookup(path, $scope, function(fn, format) {
     template = fn ? fn : noop;
+    opts.format = format;
   });
 
   // watch the params and template

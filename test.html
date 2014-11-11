@@ -31,6 +31,16 @@
         <span data-hyper-translate="t.param <- name as username"></span>
       </div>
 
+      <div data-ng-scope data-ng-init="val = {time: '2014-11-14'}">
+        <input data-ng-model="val.time" type="date" />
+        <span data-hyper-translate="t.relative <- val.time"></span>
+      </div>
+
+      <div data-autoincrement data-ng-init="user = {name: 'Robert'}">
+        <input data-ng-model="user.name" />
+        <span data-hyper-translate="t.relative <- user.name, val.time"></span>
+      </div>
+
       <input type=submit data-hyper-translate="value -> t.create" />
 
       <div data-hyper-translate="t.param <- .username">
@@ -50,7 +60,19 @@
       require('ng-hyper');
       var app = angular.module('test', ['ng-hyper', 'ng-hyper-translate']);
       app.provider({
-        '$httpBackend': angular.mock.$HttpBackendProvider
+        '$httpBackend': angular.mock.$HttpBackendProvider,
+        'hyperHttpRoot': function () {
+          return {$get: function(){return '/api'}}
+        }
+      });
+
+      app.directive('autoincrement', function() {
+        return {
+          scope: true,
+          link: function($scope, el, attr) {
+            $scope.val = {time: Date.now()};
+          }
+        }
       });
 
       var t = {
@@ -68,7 +90,36 @@
           few: '%{smart_count}rd goal',
           other: '%{smart_count}th goal'
         },
-        create: 'Create'
+        create: 'Create',
+        relative: {
+          _format: 'relative',
+          future: 'in %{time} %{name} will post',
+          past: '%{name} posted %{time} ago',
+          s: {
+            one: 'a second',
+            other: '%{time} seconds'
+          },
+          m: {
+            one: 'a minute',
+            other: '%{time} minutes'
+          },
+          h: {
+            one: 'a hour',
+            other: '%{time} hours'
+          },
+          d: {
+            one: 'a day',
+            other: '%{time} days'
+          },
+          M: {
+            one: 'a month',
+            other: '%{time} months'
+          },
+          y: {
+            one: 'a year',
+            other: '%{time} years'
+          }
+        }
       };
 
       var root = {

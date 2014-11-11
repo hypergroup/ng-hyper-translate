@@ -5,7 +5,8 @@
   "version": "0.3.3",
   "keywords": [],
   "dependencies": {
-    "lang-js/translate": "^1.0.0"
+    "lang-js/translate": "^1.0.0",
+    "lang-js/relative": "^1.0.1"
   },
   "development": {
     "camshaft/component-angular": "*",

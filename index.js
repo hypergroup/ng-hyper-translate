@@ -4,6 +4,7 @@
 
 var angular = window.angular;
 var compileTranslation = require('lang-js-translate');
+var compileRelative = require('lang-js-relative');
 
 /**
  * Allow users to opt into displaying missing translation warnings
@@ -39,18 +40,26 @@ pkg.factory('hyperTranslate', [
     return function(path, $scope, fn) {
       return hyper.get(path, $scope, function(value, req) {
         if (!value) return fn();
-        if (cache[value]) return fn(cache[value] );
+        if (cache[value]) return fn(cache[value]);
 
         var conf = value;
         if (typeof value === 'string') conf = value.split(/ *\|\|\|\| */);
         if (Array.isArray(conf) && conf.length === 1) conf = conf[0];
 
+        var format = conf._format;
+
+        var t;
+
         try {
-          fn(cache[JSON.stringify(conf)] = compileTranslation(conf, locale, opts));
+          t = cache[JSON.stringify(conf)] = format === 'relative' ?
+             compileRelative(conf, locale, opts) :
+             compileTranslation(conf, locale, opts);
         } catch (err) {
-          console.error(err.stack || err.message || err);
-          fn();
+          console.error(err);
+          return fn();
         };
+
+        fn(t, format);
       });
     };
   }
@@ -65,10 +74,16 @@ pkg.directive('hyperTranslate', [
   '$compile',
   'hyper',
   function(lookup, $compile, hyper) {
-    function watchParams(params, $scope) {
+    function watchParams(params, $scope, opts) {
+      opts = opts || {};
       angular.forEach(params, function(path, target) {
-        hyper.get(path, $scope, function(value, req) {
-          $scope[target] = value;
+        hyper.get(path, $scope, function update(value, req) {
+          if (opts.format === 'relative', target === (opts.key || 'time') && value) {
+            $scope[target] = Math.floor((new Date(value) - new Date()) / 1000);
+            if (isNaN($scope[target])) $scope[target] = 0;
+          } else {
+            $scope[target] = value;
+          }
         });
       });
     }
@@ -129,8 +144,11 @@ function init(setHtml, setAttr, watchParams, lookup, $scope, tmplSrc, str) {
 
   // lookup the path to the translation in the translate service
   var template = noop;
-  lookup(path, $scope, function(fn) {
+  // TODO figure out how to pass the relative time key
+  var opts = {};
+  lookup(path, $scope, function(fn, format) {
     template = fn ? fn : noop;
+    opts.format = format;
   });
 
   // watch the params and template

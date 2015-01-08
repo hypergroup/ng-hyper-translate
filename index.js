@@ -111,13 +111,15 @@ pkg.directive('hyperTranslate', [
         return function link($scope, elem, attrs) {
           var $setHtml = (hasTemplates ? setHtml : setHtmlText).bind(null, elem);
           var $setAttr = elem.attr.bind(elem);
-          var $tmp;
+          var $tmp = [];
           $scope.$watch(function() {
             return attrs.hyperTranslate;
           }, function(str) {
-            if ($tmp) $tmp.$destroy();
-            $tmp = $scope.$new();
-            init($setHtml, $setAttr, watchParams, lookup, $tmp, templates, str);
+            str.split(/ *\; */).forEach(function(part, i) {
+              if ($tmp[i]) $tmp[i].$destroy();
+              $tmp[i] = $scope.$new();
+              init($setHtml, $setAttr, watchParams, lookup, $tmp[i], templates, part);
+            });
           });
         };
       }
@@ -132,15 +134,19 @@ pkg.directive('hyperTranslate', [
 function init(setHtml, setAttr, watchParams, lookup, $scope, tmplSrc, str) {
   // create a new child scope and merge in template sources
   var $templates = $scope.$new();
-  for (var tmpl in tmplSrc) {
-    $templates[tmpl] = tmplSrc[tmpl];
-  }
 
   // parse the translation express
   var conf = parse(str);
   var path = conf.path;
   var attr = conf.attr;
   var setter = attr === 'html' ? setHtml.bind(null, $scope) : setAttr.bind(null, attr);
+
+  // use the children templates if we're setting the inner html
+  if (attr === 'html') {
+    for (var tmpl in tmplSrc) {
+      $templates[tmpl] = tmplSrc[tmpl];
+    }
+  }
 
   // lookup the path to the translation in the translate service
   var template = noop;

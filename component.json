@@ -2,7 +2,7 @@
   "name": "ng-hyper-translate",
   "repo": "hypergroup/ng-hyper-translate",
   "description": "Translation for ng-hyper",
-  "version": "0.3.4",
+  "version": "0.3.5",
   "keywords": [],
   "dependencies": {
     "lang-js/translate": "^1.0.0",

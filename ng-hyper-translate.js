@@ -138,48 +138,6 @@ require.define = function (name, exports) {
     exports: exports
   };
 };
-require.register("directiv~core-reduce@1.0.0", function (exports, module) {
-/**
- * Compile an object reducer
- *
- * @param {Object} obj
- * @param {Array?} keys
- * @param {Boolean?} ignoreKey
- * @param {Function}
- */
-
-module.exports = function(obj, keys, ignoreKey) {
-  return Array.isArray(obj) ?
-    initArray(obj) :
-    initObj(obj, keys || Object.keys(obj), ignoreKey);
-};
-
-function initArray(arr) {
-  return (function(fn, acc) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      acc = fn(acc, this[i], i);
-    }
-    return acc;
-  }).bind(arr);
-}
-
-function initObj(obj, keys, ignoreKey) {
-  var arr = keys.map(function(key) {
-    return obj[key];
-  });
-
-  if (ignoreKey) return initArray(arr);
-
-  return (function(ks, fn, acc) {
-    for (var i = 0, l = this.length; i < l; i++) {
-      acc = fn(acc, this[i], keys[i]);
-    }
-    return acc;
-  }).bind(arr, keys);
-}
-
-});
-
 require.register("lang-js~cardinal@0.1.2", function (exports, module) {
 var e = exports;
 
@@ -452,134 +410,6 @@ if(typeof n==="string")n=parseInt(n,10);if(n===Math.floor(n)&&n>=0&&n<=1||n===Ma
 }, ["one","other"]);
 });
 
-require.register("lang-js~interpolate@1.0.1", function (exports, module) {
-/**
- * Expose the compile function
- */
-
-exports = module.exports = compile;
-
-/**
- * Expose the interpolate function
- */
-
-exports.interpolate = interpolate;
-
-/**
- * Interpolate a string without a compilation step
- *
- * THIS IS NOT RECOMMENDED FOR PRODUCTION USE
- *
- * @param {String} string
- * @param {Object?} params
- * @param {Object?} opts
- */
-
-function interpolate(string, params, opts) {
-  return compile(string, opts)(params).join('');
-};
-
-/**
- * Compile a string into an interpolate function
- *
- * @param {String} string
- * @param {Object?} opts
- * @return {Function}
- */
-
-function compile(string, opts) {
-  opts = opts || {};
-  var open = escapeRegex(opts.open || '%{');
-  var close = opts.close || '}';
-  var char = close.charAt(0);
-  var re = new RegExp('(' + escapeRegex(open) + ' *[^' + escapeRegex(char) + ']+ *' + escapeRegex(close) + ')', 'g');
-
-  var params = 'params';
-
-  var fallback = opts.fallback ?
-        ' || ' + JSON.stringify(opts.fallback) :
-        '';
-
-  var rawParts = string.split(re);
-  var parts = [], paramsObj = {};
-  for (var i = 0, l = rawParts.length, part, prop; i < l; i++) {
-    part = rawParts[i];
-
-    // skip the blank parts
-    if (!part) continue;
-
-    // it's normal text
-    if (part.indexOf(open) !== 0 && part.indexOf(close) !== part.length - close.length) {
-      parts.push(JSON.stringify(part));
-      continue;
-    }
-
-    // it's a interpolation part
-    part = part.slice(open.length, -close.length);
-    prop = formatProperty(part, params);
-    part = prop[1] || part;
-    paramsObj[part] = (paramsObj[part] || 0) + 1;
-    parts.push(prop[0] + fallback);
-  }
-
-  var fn = new Function('exec, ' + params,
-    params + ' = ' + params + ' || {};\nreturn [' + parts.join(', ') + '];').bind(null, exec);
-  fn.params = paramsObj;
-  return fn;
-}
-
-/**
- * Execute a function for a block
- *
- * @param {String} name
- * @param {String} contents
- * @param {Object} params
- * @return {Any}
- */
-
-function exec(name, contents, params) {
-  var fn = params[name];
-  var type = typeof fn;
-  if (type === 'function') return fn(contents, params);
-  return type === 'undefined' ? contents : fn;
-}
-
-/**
- * Escape any reserved regex characters
- *
- * @param {String} str
- * @return {String}
- */
-
-function escapeRegex(str) {
-  return str.replace(/[\^\-\]\\]/g, function(c) {
-    return '\\' + c;
-  });
-}
-
-/**
- * Format a property accessor
- *
- * @param {String} prop
- * @param {String} params
- * @return {String}
- */
-
-var re = /^[\w\d]+$/;
-function formatProperty(prop, params) {
-  if (!re.test(prop)) {
-    var parts = prop.split(/ *: */);
-    if (parts.length === 1) return [params + '[' + JSON.stringify(prop) + ']'];
-
-    return ['exec("' + parts[0] + '", "' + parts[1] + '", ' + params + ')', parts[0]];
-  }
-  var int = parseInt(prop, 10);
-  if (isNaN(int)) return [params + '.' + prop];
-  return [params + '[' + prop + ']'];
-}
-
-});
-
 require.register("lang-js~ordinal@0.1.2", function (exports, module) {
 var e = exports;
 
@@ -711,6 +541,176 @@ if(typeof n==="string")n=parseInt(n,10);if(n===1)return"one";if(n%10===4&&!(n%10
 augment(e.sv = function sv(n) {
 if(typeof n==="string")n=parseInt(n,10);if((n%10===1||n%10===2)&&!(n%100===11||n%100===12))return"one";return"other"
 }, ["one","other"]);
+});
+
+require.register("directiv~core-reduce@1.0.0", function (exports, module) {
+/**
+ * Compile an object reducer
+ *
+ * @param {Object} obj
+ * @param {Array?} keys
+ * @param {Boolean?} ignoreKey
+ * @param {Function}
+ */
+
+module.exports = function(obj, keys, ignoreKey) {
+  return Array.isArray(obj) ?
+    initArray(obj) :
+    initObj(obj, keys || Object.keys(obj), ignoreKey);
+};
+
+function initArray(arr) {
+  return (function(fn, acc) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      acc = fn(acc, this[i], i);
+    }
+    return acc;
+  }).bind(arr);
+}
+
+function initObj(obj, keys, ignoreKey) {
+  var arr = keys.map(function(key) {
+    return obj[key];
+  });
+
+  if (ignoreKey) return initArray(arr);
+
+  return (function(ks, fn, acc) {
+    for (var i = 0, l = this.length; i < l; i++) {
+      acc = fn(acc, this[i], keys[i]);
+    }
+    return acc;
+  }).bind(arr, keys);
+}
+
+});
+
+require.register("lang-js~interpolate@1.0.1", function (exports, module) {
+/**
+ * Expose the compile function
+ */
+
+exports = module.exports = compile;
+
+/**
+ * Expose the interpolate function
+ */
+
+exports.interpolate = interpolate;
+
+/**
+ * Interpolate a string without a compilation step
+ *
+ * THIS IS NOT RECOMMENDED FOR PRODUCTION USE
+ *
+ * @param {String} string
+ * @param {Object?} params
+ * @param {Object?} opts
+ */
+
+function interpolate(string, params, opts) {
+  return compile(string, opts)(params).join('');
+};
+
+/**
+ * Compile a string into an interpolate function
+ *
+ * @param {String} string
+ * @param {Object?} opts
+ * @return {Function}
+ */
+
+function compile(string, opts) {
+  opts = opts || {};
+  var open = escapeRegex(opts.open || '%{');
+  var close = opts.close || '}';
+  var char = close.charAt(0);
+  var re = new RegExp('(' + escapeRegex(open) + ' *[^' + escapeRegex(char) + ']+ *' + escapeRegex(close) + ')', 'g');
+
+  var params = 'params';
+
+  var fallback = opts.fallback ?
+        ' || ' + JSON.stringify(opts.fallback) :
+        '';
+
+  var rawParts = string.split(re);
+  var parts = [], paramsObj = {};
+  for (var i = 0, l = rawParts.length, part, prop; i < l; i++) {
+    part = rawParts[i];
+
+    // skip the blank parts
+    if (!part) continue;
+
+    // it's normal text
+    if (part.indexOf(open) !== 0 && part.indexOf(close) !== part.length - close.length) {
+      parts.push(JSON.stringify(part));
+      continue;
+    }
+
+    // it's a interpolation part
+    part = part.slice(open.length, -close.length);
+    prop = formatProperty(part, params);
+    part = prop[1] || part;
+    paramsObj[part] = (paramsObj[part] || 0) + 1;
+    parts.push(prop[0] + fallback);
+  }
+
+  var fn = new Function('exec, ' + params,
+    params + ' = ' + params + ' || {};\nreturn [' + parts.join(', ') + '];').bind(null, exec);
+  fn.params = paramsObj;
+  return fn;
+}
+
+/**
+ * Execute a function for a block
+ *
+ * @param {String} name
+ * @param {String} contents
+ * @param {Object} params
+ * @return {Any}
+ */
+
+function exec(name, contents, params) {
+  var fn = params[name];
+  var type = typeof fn;
+  if (type === 'function') return fn(contents, params);
+  return type === 'undefined' ? contents : fn;
+}
+
+/**
+ * Escape any reserved regex characters
+ *
+ * @param {String} str
+ * @return {String}
+ */
+
+function escapeRegex(str) {
+  return str.replace(/[\^\-\]\\]/g, function(c) {
+    return '\\' + c;
+  });
+}
+
+/**
+ * Format a property accessor
+ *
+ * @param {String} prop
+ * @param {String} params
+ * @return {String}
+ */
+
+var re = /^[\w\d]+$/;
+function formatProperty(prop, params) {
+  if (!re.test(prop)) {
+    var parts = prop.split(/ *: */);
+    if (parts.length === 1) return [params + '[' + JSON.stringify(prop) + ']'];
+
+    return ['exec("' + parts[0] + '", "' + parts[1] + '", ' + params + ')', parts[0]];
+  }
+  var int = parseInt(prop, 10);
+  if (isNaN(int)) return [params + '.' + prop];
+  return [params + '[' + prop + ']'];
+}
+
 });
 
 require.register("lang-js~translate@1.0.2", function (exports, module) {
@@ -1182,13 +1182,15 @@ pkg.directive('hyperTranslate', [
         return function link($scope, elem, attrs) {
           var $setHtml = (hasTemplates ? setHtml : setHtmlText).bind(null, elem);
           var $setAttr = elem.attr.bind(elem);
-          var $tmp;
+          var $tmp = [];
           $scope.$watch(function() {
             return attrs.hyperTranslate;
           }, function(str) {
-            if ($tmp) $tmp.$destroy();
-            $tmp = $scope.$new();
-            init($setHtml, $setAttr, watchParams, lookup, $tmp, templates, str);
+            str.split(/ *\; */).forEach(function(part, i) {
+              if ($tmp[i]) $tmp[i].$destroy();
+              $tmp[i] = $scope.$new();
+              init($setHtml, $setAttr, watchParams, lookup, $tmp[i], templates, part);
+            });
           });
         };
       }
@@ -1203,15 +1205,19 @@ pkg.directive('hyperTranslate', [
 function init(setHtml, setAttr, watchParams, lookup, $scope, tmplSrc, str) {
   // create a new child scope and merge in template sources
   var $templates = $scope.$new();
-  for (var tmpl in tmplSrc) {
-    $templates[tmpl] = tmplSrc[tmpl];
-  }
 
   // parse the translation express
   var conf = parse(str);
   var path = conf.path;
   var attr = conf.attr;
   var setter = attr === 'html' ? setHtml.bind(null, $scope) : setAttr.bind(null, attr);
+
+  // use the children templates if we're setting the inner html
+  if (attr === 'html') {
+    for (var tmpl in tmplSrc) {
+      $templates[tmpl] = tmplSrc[tmpl];
+    }
+  }
 
   // lookup the path to the translation in the translate service
   var template = noop;
